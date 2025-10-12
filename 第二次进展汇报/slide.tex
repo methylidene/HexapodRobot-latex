@@ -1,0 +1,324 @@
+\documentclass{beamer}
+\usepackage{ctex, hyperref}
+\usepackage[T1]{fontenc}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning}
+% other packages
+\usepackage{latexsym,amsmath,xcolor,multicol,booktabs,calligra}
+\usepackage{graphicx,pstricks,listings,stackengine}
+
+\author{谭诗弘，黄育民，曹洪珲}
+\title{智能系统设计实践}
+\subtitle{六足机器人避障控制\ 第一次进展汇报}
+\institute{武汉大学电子信息学院}
+\date{2025年9月29日}
+\usepackage{whu}
+
+% defs
+\def\cmd#1{\texttt{\color{red}\footnotesize $\backslash$#1}}
+\def\env#1{\texttt{\color{blue}\footnotesize #1}}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+\definecolor{halfgray}{gray}{0.55}
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\bfseries\color{deepblue},
+    emphstyle=\ttfamily\color{deepred},    % Custom highlighting style
+    stringstyle=\color{deepgreen},
+    numbers=left,
+    numberstyle=\small\color{halfgray},
+    rulesepcolor=\color{red!20!green!20!blue!20},
+    frame=shadowbox,
+}
+
+
+\begin{document}
+
+\kaishu
+\begin{frame}
+    \titlepage
+    \begin{figure}[htpb]
+        \begin{center}
+            \includegraphics[width=0.2\linewidth]{pic/whulogo.png}
+        \end{center}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \tableofcontents[sectionstyle=show,subsectionstyle=show/shaded/hide,subsubsectionstyle=show/shaded/hide]
+\end{frame}
+
+\section{主要控制文件}
+
+\begin{frame}{主要控制文件概览}
+    \textbf{共 11 个核心模块：}
+    \begin{enumerate}
+        \item base.py：基础坐标类与腿尖坐标系
+        \item config.py：配置参数与预定义步态轨迹
+        \item hexapod.py：六足机器人主控制类
+        \item kinematicLib.py：运动学核心（逆运动学、轨迹生成、坐标变换）
+        \item leg.py：单腿控制类，负责逆运动学与舵机控制
+        \item movement\_paths.py：预定义步态轨迹数据库
+        \item movement.py：高层动作控制器（模式切换、轨迹调度）
+        \item movement\_table.py：静态动作路径表
+        \item MutoLib.py：机器人与上位机通信接口
+        \item pathPlanning.py：路径规划模块
+        \item servo.py：舵机控制模块
+    \end{enumerate}
+\end{frame}
+
+% % ---------------------------
+% \begin{frame}{模块分层结构图（详细版）}
+% \centering
+% \scalebox{0.75}{
+% \begin{tikzpicture}[node distance=0.6cm, every node/.style={draw, rounded corners, align=center, font=\scriptsize, minimum width=2.8cm, minimum height=0.6cm}]
+% % 基础层
+% \node (base) {基础层 \\ base.py};
+
+% % 配置层
+% \node (config) [below=of base] {配置层 \\ config.py};
+
+% % 单腿控制层
+% \node (leg) [below=of config] {单腿控制层 \\ leg.py};
+
+% % 运动学与路径层
+% \node (kinematic) [below=of leg, xshift=-2.8cm] {kinematicLib.py};
+% \node (mvtpaths) [below=of leg] {movement\_paths.py};
+% \node (mvttable) [below=of leg, xshift=2.8cm] {movement\_table.py};
+
+% % 动作调度层
+% \node (movement) [below=2.5cm of mvtpaths] {动作调度层 \\ movement.py};
+
+% % 整体协调层
+% \node (hexapod) [below=of movement] {整体协调层 \\ hexapod.py};
+
+% % 通信层
+% \node (muto) [below=of hexapod, xshift=-3.5cm] {通信层 \\ MutoLib.py};
+
+% % 路径规划层
+% \node (path) [below=of hexapod, xshift=3.5cm] {路径规划层 \\ pathPlanning.py};
+
+% % 执行层
+% \node (servo) [below=2.5cm of hexapod] {执行层 \\ servo.py};
+
+% % Arrows
+% \draw[->] (base) -- (config);
+% \draw[->] (config) -- (leg);
+% \draw[->] (leg) -- (kinematic);
+% \draw[->] (leg) -- (mvtpaths);
+% \draw[->] (leg) -- (mvttable);
+% \draw[->] (kinematic) -- (movement);
+% \draw[->] (mvtpaths) -- (movement);
+% \draw[->] (mvttable) -- (movement);
+% \draw[->] (movement) -- (hexapod);
+% \draw[->] (hexapod) -- (servo);O 
+% \draw[->] (hexapod) -- (muto);
+% \draw[->] (hexapod) -- (path);
+
+% \end{tikzpicture}
+% }
+% \end{frame}
+
+% ---------------------------
+\begin{frame}{控制流程简化图}
+\centering
+\begin{tikzpicture}[node distance=1.3cm, every node/.style={draw, rounded corners, align=center, font=\small, minimum width=4cm, minimum height=1cm}]
+
+\node (input) {输入层 \\ 用户指令 / 上位机 (MutoLib.py)};
+\node (process) [below=of input] {处理层 \\ 运动学与调度 \\
+(hexapod.py, movement.py, kinematicLib.py, pathPlanning.py)};
+\node (exec) [below=of process] {执行层 \\ 舵机驱动 (servo.py)};
+
+\draw[->] (input) -- (process);
+\draw[->] (process) -- (exec);
+
+\end{tikzpicture}
+\end{frame}
+
+% ---------------------------
+\begin{frame}{关键模块重点}
+    在 11 个模块中，以下 5 个最为关键：
+    \begin{itemize}
+        \item hexapod.py：整体协调
+        \item movement.py：动作调度
+        \item kinematicLib.py：运动学计算
+        \item pathPlanning.py：路径规划
+        \item servo.py：舵机执行
+    \end{itemize}
+    后续将对这些模块进行详细介绍。
+\end{frame}
+
+% ---------------------------
+\begin{frame}{Hexapod 主控制类（hexapod.py）}
+    \begin{itemize}
+        \item 管理六条腿（RealLeg 实例）
+        \item 接收高层运动指令（如 move(x,y,z)）
+        \item 调用 movement 模块生成轨迹点
+        \item 分配轨迹点给各条腿，保持协调与平衡
+        \item 关键作用：保证三条腿支撑、三条腿摆动，实现三角步态
+    \end{itemize}
+\end{frame}
+
+% ---------------------------
+\begin{frame}{动作调度器（movement.py）}
+    \begin{itemize}
+        \item 定义动作模式：待机、前进、旋转、攀爬等
+        \item 核心接口：
+        \begin{itemize}
+            \item set\_mode()：切换模式
+            \item set\_speed()：调整速度
+            \item next()：取出下一组轨迹点
+        \end{itemize}
+        \item 输入：用户动作指令（模式 + 速度）
+        \item 输出：下一步六条腿的 (x,y,z) 坐标
+        \item 特点：结合 movement\_table（静态路径）和 pathPlanning（动态路径）
+    \end{itemize}
+\end{frame}
+
+% ---------------------------
+\begin{frame}{运动学计算（kinematicLib.py）}
+    \begin{itemize}
+        \item 逆运动学：足端坐标 $\to$ 关节角度
+        \item 轨迹生成器：半圆/椭圆路径
+        \item 坐标变换：三维旋转矩阵
+        \item 验证：检查轨迹是否在机械允许范围内
+        \item 地位：是“数学大脑”，确保动作正确
+    \end{itemize}
+\end{frame}
+
+% ---------------------------
+\begin{frame}{路径规划（pathPlanning.py）}
+    \begin{itemize}
+        \item 输入：方向、速度、角度
+        \item 输出：六条腿的完整步态轨迹
+        \item 特点：
+        \begin{itemize}
+            \item 半圆摆动：平滑抬腿
+            \item 直线支撑：提供推进力
+            \item 三角步态：保持平衡
+        \end{itemize}
+        \item 作用：生成动态动作路径，供 movement 调度
+    \end{itemize}
+\end{frame}
+
+% ---------------------------
+\begin{frame}{舵机执行层（servo.py）}
+    \begin{itemize}
+        \item 输入：逆运动学角度与执行时间
+        \item 角度映射：理论角度 $\to$ 舵机实际角度
+        \item 指令生成：封装通信协议数据帧
+        \item 执行：通过串口下发到舵机
+        \item 地位：是“肌肉”，将计算结果落实为实际动作
+    \end{itemize}
+\end{frame}
+
+\section{控制流程}
+
+\begin{frame}{控制流程图}
+    \begin{figure}[htpb]
+        \centering
+        \includegraphics[width=0.49\linewidth]{pic/soft.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{基础层}
+    \begin{exampleblock}{base.py}
+        定义了3D 点(point3d) 和腿尖位置集合(locations)，作为六足机器人所有运动的几何基础。
+        \begin{itemize}
+            \item point3d：描述一个点(x,y,z)，支持加减乘法。
+            \item locations：保存6 条腿的足尖坐标，方便批量操作。
+        \end{itemize}
+        提供了坐标系的数据结构，便于后续的运动轨迹和逆运动学操作。
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{配置层}
+    \begin{exampleblock}{config.py}
+        存放机器人硬件和运动学的固定参数。
+        \begin{itemize}
+            \item 关节长度、安装角度、腿的初始坐标。
+            \item 默认待机位置。
+            \item 预定义的步态轨迹路径点。
+        \end{itemize}
+        通过这些参数计算每条腿运动的范围和姿态。
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{单腿控制层}
+    \begin{exampleblock}{leg.py$\rightarrow$ RealLeg}
+        \begin{itemize}
+            \item 将每条腿视为一个对象，将全局坐标系下的目标点转化为腿的局部坐标系。
+            \item 调用kinematicLib.py计算舵机角度
+            \item 调用servo.py将角度转化为PWM命令
+        \end{itemize}
+        负责具体的单腿控制部分。
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{运动学与路径层}
+    \begin{exampleblock}{kinematicLib.py}
+        负责逆运动学操作，将三维点转换为舵机角度。同时生成半圆/椭圆腿尖路径，并处理旋转矩阵的坐标变换。
+    \end{exampleblock}
+    \begin{exampleblock}{movement\_paths.py}
+        存储不同运动模式的轨迹（如前进、后退、旋转等），每个轨迹有20个时间步构成，每一步包含六条腿的三维坐标。
+    \end{exampleblock}
+    \begin{exampleblock}{movement\_table.py}
+        存储一个动作查找表，将各种运动模式映射到对应的路径点序列，避免每次都实时计算轨迹，加快执行速度。
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{动作调度层}
+    \begin{exampleblock}{movement.py}
+        作为动作控制器，负责管理运动模式和路径
+        \begin{itemize}
+            \item set\_mode()：切换机器人的工作模式。
+            \item set\_speed()：调整机器人的运动速度。
+            \item next()：取出下一步的运动坐标，供六条腿执行。
+        \end{itemize}
+        其决定机器人下一时刻的运动状态。
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{底层}
+    \begin{exampleblock}{servo.py}
+        负责将运动数据转化为舵机通信协议数据帧，通过串口等发送到实际硬件，驱动硬件执行。
+
+        负责真实动作的运行。
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{六足整体协调}
+    \begin{exampleblock}{hexapod.py$\rightarrow $Hexapod类}
+        总体协调各个模块的工作。
+        \begin{itemize}
+            \item 初始化六条腿(RealLeg)。
+            \item 接受用户的运动指令(move())。
+            \item 调用movement.py生成轨迹点。
+            \item 将轨迹点分配给各条腿，调用leg.move\_tip()。
+            \item 保持整体的平衡和同步。
+        \end{itemize}
+        
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}{控制流程总结}
+    \begin{enumerate}
+        \item 用户输入（例如hexapod.move(10,0,0) $\rightarrow$ 前进10cm）。
+        \item movement.py 根据输入调用movement\_table / pathPlanning 生成完整轨迹点。
+        \item hexapod.py 轮询调用movement.next() $\rightarrow$ 取出6 条腿的坐标。
+        \item leg.py 将目标点$\rightarrow$ 逆运动学角度。
+        \item servo.py 把角度$\rightarrow$ 舵机指令。
+        \item 舵机动作，机器人移动。
+    \end{enumerate}
+    始终保持三条腿支撑、三条腿摆动的三角步态，从而保证平衡。
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        {\Huge\calligra Thanks!}
+    \end{center}
+\end{frame}
+
+\end{document}
