@@ -1,0 +1,4 @@
+\beamer@sectionintoc {1}{研究背景与意义}{2}{0}{1}
+\beamer@sectionintoc {2}{步态与控制策略}{5}{0}{2}
+\beamer@sectionintoc {3}{中期进展}{9}{0}{3}
+\beamer@sectionintoc {4}{未来研究规划}{15}{0}{4}

@@ -11,7 +11,7 @@
 \title{智能系统设计实践}
 \subtitle{六足机器人避障控制开题报告}
 \institute{武汉大学电子信息学院}
-\date{2025年10月28日}
+\date{2025年9月22日}
 \usepackage{whu}
 
 % defs
@@ -51,206 +51,91 @@
 % \end{frame}
 
 
-\section{研究背景与意义}
-\begin{frame}{课题背景}
-  \begin{itemize}
-    \item 六足机器人具有稳定性强、地形适应性好的特点，是地面移动机器人研究的重要方向。
-    \item 可应用于灾害救援、地质勘探、农业自动化及太空探测等领域。
-    \item 但其自主避障与攀爬控制仍存在高维控制复杂性与动态环境适应难题。
-  \end{itemize}
-  \vspace{0.3cm}
-  \centering
-  \begin{figure}[htpb]
-    \begin{center}
-        \includegraphics[width=0.6\linewidth]{pic/六足带机械臂狗.png}
-    \end{center}
-\end{figure}
-\textit{图1.1 越疆探索者六足机器人}\\
-\end{frame}
+\begin{frame}{中期进展概览}
+    本阶段已完成如下工作：
+    \begin{itemize}
+        \item 组装了六足机器人，熟悉了上位机控制代码；
+        \item 调试了机器人原装的基本功能；
+        \item 编写了基础动作与表演功能的测试代码。
+    \end{itemize}
 
-\begin{frame}{研究总体思路}
-  \begin{itemize}
-    \item 研究平台：Yahboom Muto S2 六足机器人。
-    \item 目标：在复杂地形中实现平衡控制与简单越障。
-    \item 三个研究层次：
-      \begin{enumerate}
-        \item 步态模式优化；
-        \item 控制策略设计与分层控制；
-        \item 平衡保持与理论建模。
-      \end{enumerate}
-  \end{itemize}
-\end{frame}
+    \vspace{0.3cm}
+    \textbf{本周进展：}  
+    成功利用机器人自带的 IMU 模块获取自身坡度信息，为后续的上斜坡功能提供参数支持。
 
-%---------------------------------------------
-\section{步态与控制策略}
-\begin{frame}{步态设计与优化}
-  \begin{itemize}
-    \item 平地步态优化：在波动步态与三角步态间平衡速度与能耗。
-    \item 坡面步态优化：调整支撑腿分布与身体姿态角。
-    \item 不平整地形：引入反应式足端轨迹修正与动态支撑腿策略。
-  \end{itemize}
-  \vspace{0.3cm}
-\end{frame}
-
-\begin{frame}{分层控制架构}
-  \begin{itemize}
-    \item \textbf{底层控制：} 单舵机级别精确控制。
-    \item \textbf{中层控制：} 单腿三自由度模块化管理，实现逆运动学求解。
-    \item \textbf{上层控制：} 多腿协调形成整体运动模式（前进、旋转、恢复等）。
-    \item 形成“宏动作库”，支持跨越障碍、姿态恢复等复合操作。
-  \end{itemize}
-  \vspace{0.3cm}
-\end{frame}
-
-\begin{frame}{人工干预机制与平衡保持}
-  \begin{itemize}
-    \item 提供可视化界面，显示姿态角、支撑多边形与质心位置。
-    \item 支持多模态输入（手柄、快捷键）实现快速干预。
-    \item 建立基于 IMU 的平衡判据：
-      \begin{itemize}
-        \item 质心投影与支撑区距离；
-        \item 身体俯仰与横滚角；
-        \item 动态平衡裕度指标。
-      \end{itemize}
-  \end{itemize}
-\end{frame}
-
-%---------------------------------------------
-\section{中期进展}
-\begin{frame}{六足机器人组装与调试}
-  \begin{itemize}
-    \item 完成 Muto S2 六足机器人组装与手柄控制。
-    \item 具备前后左右移动、旋转、姿态调整等基础动作。
-  \end{itemize}
-  \vspace{0.3cm}
-  \centering
-  \begin{figure}[htpb]
-    \begin{center}
-        \includegraphics[width=0.3\linewidth]{pic/hex.jpg}
-    \end{center}
-\end{figure}
-\textit{图2.1 手柄操控六足机器人}\\
-\end{frame}
-
-\begin{frame}{硬件与软件架构}
-  \begin{columns}
-  \column{0.5\textwidth}
-  \textbf{硬件结构}
-  \begin{itemize}
-    \item 顶层：Jetson Nano（高层控制与路径规划）
-    \item 中层：STM32 六足扩展板（舵机驱动与数据采集）
-    \item 底层：舵机与电池模块（执行机构）
-  \end{itemize}
-  \vspace{0.2cm}
-  \begin{figure}[htpb]
-    \begin{center}
-        \includegraphics[width=0.4\linewidth]{pic/arch.jpg}
-    \end{center}
-\end{figure}
-\textit{图2.2 硬件结构示意图}\\
-  \column{0.5\textwidth}
-  \textbf{软件结构}
-  \begin{itemize}
-    \item 人机输入层：手柄/GUI
-    \item 上位控制层：Python 控制逻辑
-    \item 步态规划层：轨迹生成与坐标变换
-    \item 舵机控制层：PWM 与 PID 实现
-  \end{itemize}
-  \begin{figure}[htpb]
-    \begin{center}
-        \includegraphics[width=0.5\linewidth]{pic/soft.png}
-    \end{center}
-\end{figure}
-\textit{图2.3 软件架构图}\\
-  \end{columns}
-\end{frame}
-
-\begin{frame}{控制流程与关键模块}
-  \begin{itemize}
-    \item 关键模块：
-      \begin{enumerate}
-        \item \texttt{hexapod.py} —— 整体协调；
-        \item \texttt{movement.py} —— 动作调度；
-        \item \texttt{kinematicLib.py} —— 逆运动学；
-        \item \texttt{pathPlanning.py} —— 步态轨迹生成；
-        \item \texttt{servo.py} —— 舵机通信与控制。
-      \end{enumerate}
-    \item 保持三腿支撑、三腿摆动的稳定三角步态。
-  \end{itemize}
-  \vspace{0.3cm}
-\end{frame}
-
-\begin{frame}{控制流程图}
- \begin{figure}[htpb]
-        \begin{center}
-            \includegraphics[width=0.5\linewidth]{pic/control.png}
-        \end{center}
+    \begin{figure}[htpb]
+        \centering
+        \includegraphics[width=0.7\linewidth]{pic/code.png}
     \end{figure}
-\textit{图2.4 控制流程示意图}
 \end{frame}
 
-
-\begin{frame}{功能实现与验证}
-  \begin{itemize}
-    \item 实现功能：
-      \begin{enumerate}
-        \item 基本行走（前进、后退、旋转）；
-        \item 姿态 IMU 数据采集与分析；
-        \item 各舵机独立控制与扭矩调节。
-      \end{enumerate}
-    \item 使用 \texttt{read\_IMU()} 实现姿态角（Roll, Pitch, Yaw）读取。
-    \item 可独立控制 18 个总线舵机，实现腿部精准调节。
-  \end{itemize}
-  \vspace{0.3cm}
-  \begin{figure}[htpb]
-    \begin{center}
-        \includegraphics[width=0.4\linewidth]{pic/motor.png}
-        \includegraphics[width=0.4\linewidth]{pic/motor2.png}
-    \end{center}
-\end{figure}
-\textit{图2.5 舵机编号示意图 / 图2.6 控件界面结果}\\
+\begin{frame}{IMU 模块介绍}
+    \begin{figure}[htpb]
+        \centering
+        \includegraphics[width=1.0\linewidth]{pic/IMU.png}
+    \end{figure}
 \end{frame}
 
-%---------------------------------------------
-\section{未来研究规划}
-\begin{frame}{人员分工与时间安排}
-  \begin{itemize}
-    \item 曹洪珲：前端控件调试与实现；
-    \item 黄育民：底层舵机控制与接口开发；
-    \item 谭诗弘：文献调研、驱动库阅读与报告撰写。
-  \end{itemize}
-  \vspace{0.2cm}
-  \textbf{时间规划：}
-  \begin{itemize}
-    \item 第8周：实现低矮障碍跨越；
-    \item 第9周：实现手柄舵机控制；
-    \item 第10–11周：实现带坡度越障；
-    \item 第12周：完成报告与答辩准备。
-  \end{itemize}
+\begin{frame}{IMU 返回数据含义}
+    \begin{table}[htpb]
+        \centering
+        \resizebox{0.9\linewidth}{!}{
+        \begin{tabular}{|c|c|c|c|c|}
+            \hline
+            名称 & 中文名 & 含义 & 单位 & 典型范围 \\
+            \hline
+            roll & 横滚角 & 绕 X 轴旋转的角度，表示机器人左右倾斜程度 & \textdegree & -180\textdegree{} $\sim$ +180\textdegree{} \\
+            \hline
+            pitch & 俯仰角 & 绕 Y 轴旋转的角度，表示机器人前后倾斜程度 & \textdegree & -90\textdegree{} $\sim$ +90\textdegree{} \\
+            \hline
+            yaw & 航向角 & 绕 Z 轴旋转的角度，表示机器人朝向（转弯方向） & \textdegree & 0\textdegree{} $\sim$ 360\textdegree{} \\
+            \hline
+            temp & 温度 & IMU 模块内部温度 & \textcelsius & 一般 20 $\sim$ 40 \textcelsius \\
+            \hline
+        \end{tabular}
+        }
+    \end{table}
 \end{frame}
 
-\begin{frame}{展示与应用前景}
-  \begin{itemize}
-    \item 展示方式：现场实地演示机器人越障动作。
-    \item 应用方向：
-      \begin{enumerate}
-        \item 半自主避障系统；
-        \item 教学与科研示范；
-        \item 灾害救援与探测任务。
-      \end{enumerate}
-    \item 学术价值：控制分层、步态优化和平衡建模方法可推广至其他多足机器人。
-  \end{itemize}
+\begin{frame}{上坡与俯仰角（pitch）的关系}
+    当机器人上坡或下坡时，主要导致机身前后倾斜，因此与 \textbf{pitch（俯仰角）} 直接相关。
+    \begin{itemize}
+        \item 上坡时：前方抬高 $\Rightarrow$ pitch 增大（为正值）；
+        \item 下坡时：前方降低 $\Rightarrow$ pitch 减小（为负值）。
+    \end{itemize}
+
+    \vspace{0.3cm}
+    \textbf{示例：}
+    \[
+        \text{imu} = [0.54, 1.45, 51.77, 20]
+    \]
+    \begin{itemize}
+        \item roll = 0.54\textdegree{}：机器人基本水平，无明显左右倾斜；
+        \item pitch = 1.45\textdegree{}：机器人略微前倾，可能处于轻微上坡；
+        \item yaw = 51.77\textdegree{}：机器人当前朝向；
+        \item temp = 20\textcelsius：IMU 模块温度。
+    \end{itemize}
+
+    \begin{figure}[htpb]
+        \centering
+        \includegraphics[width=0.65\linewidth]{pic/result.png}
+    \end{figure}
 \end{frame}
 
-\begin{frame}{总结}
-  \begin{itemize}
-    \item 已完成硬件组装、架构分析与控制代码验证。
-    \item 建立了完整的分层控制与步态规划框架。
-    \item 下一阶段将重点突破跨越障碍及姿态自平衡控制。
-  \end{itemize}
-  \vspace{0.4cm}
-  \centering
-  \textbf{—— 六足机器人避障与控制研究仍在持续推进 ——}
+\begin{frame}{实验结果展示（一）}
+    \textbf{结果：}
+    \begin{figure}[htpb]
+        \centering
+        \includegraphics[width=0.4\linewidth]{pic/result-1.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{实验结果展示（二）}
+    同样地，也可以通过 IMU 判断水平方向的倾斜：
+    \begin{figure}[htpb]
+        \centering
+        \includegraphics[width=0.7\linewidth]{pic/result-2.png}
+    \end{figure}
 \end{frame}
 
 

@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2023.10.24)  1 NOV 2025 14:29
+This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2023.10.24)  20 OCT 2025 13:32
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1288,126 +1288,64 @@ File: pic/whulogo.png Graphic file (type bmp)
 <pic/whulogo.png>
  [1
 
-] (./slide.toc) [2
-
 ]
-LaTeX Font Info:    Trying to load font information for U+msa on input line 69.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 70.
  (d:/tools/latex/texlive/2023/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 69.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 70.
  (d:/tools/latex/texlive/2023/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <10.95> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 69.
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 70.
 LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <8> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 69.
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 70.
 LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <6> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 69.
-File: pic/六足带机械臂狗.png Graphic file (type bmp)
-<pic/六足带机械臂狗.png>
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 70.
 
-
-LaTeX Font Warning: Font shape `TU/KaiTi(0)/m/it' undefined
-(Font)              using `TU/KaiTi(0)/m/n' instead on input line 69.
-
-[3
-
-] [4
-
-] (./slide.toc) [5
-
-] [6
-
-]
 
 LaTeX Font Warning: Font shape `TU/KaiTi(0)/b/n' undefined
-(Font)              using `TU/KaiTi(0)/m/n' instead on input line 103.
+(Font)              using `TU/KaiTi(0)/m/n' instead on input line 70.
 
-[7
-
-]
-LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <10> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 116.
-LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <7> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 116.
-LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <5> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 116.
- [8
-
-] (./slide.toc) [9
+File: pic/code.png Graphic file (type bmp)
+<pic/code.png>
+[2
 
 ]
-File: pic/hex.jpg Graphic file (type bmp)
-<pic/hex.jpg>
- [10
+File: pic/IMU.png Graphic file (type bmp)
+<pic/IMU.png>
+ [3
 
 ]
-File: pic/arch.jpg Graphic file (type bmp)
-<pic/arch.jpg>
-File: pic/soft.png Graphic file (type bmp)
-<pic/soft.png>
- [11
+LaTeX Font Info:    Trying to load font information for TS1+lmss on input line 98.
+ (d:/tools/latex/texlive/2023/texmf-dist/tex/latex/lm/ts1lmss.fd
+File: ts1lmss.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+) [4
 
 ]
+File: pic/result.png Graphic file (type bmp)
+<pic/result.png>
 
-Package fontspec Info: Could not resolve font "FangSong/BI" (it probably
-(fontspec)             doesn't exist).
-
-
-Package fontspec Info: Could not resolve font "FangSong/B" (it probably
-(fontspec)             doesn't exist).
-
-
-Package fontspec Info: Could not resolve font "FangSong/I" (it probably
-(fontspec)             doesn't exist).
-
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 181.
- (d:/tools/latex/texlive/2023/texmf-dist/tex/latex/lm/t1lmtt.fd
-File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-
-Package fontspec Info: Font family 'FangSong(0)' created for font 'FangSong'
-(fontspec)             with options [Script={CJK}].
-(fontspec)              
-(fontspec)              This font family consists of the following NFSS
-(fontspec)             series/shapes:
-(fontspec)              
-(fontspec)             - 'normal' (m/n) with NFSS spec.:
-(fontspec)             <->"FangSong/OT:script=hani;language=dflt;"
-(fontspec)             - 'small caps'  (m/sc) with NFSS spec.: 
-
- [12
-
-]
-File: pic/control.png Graphic file (type bmp)
-<pic/control.png>
- [13
-
-]
-File: pic/motor.png Graphic file (type bmp)
-<pic/motor.png>
-File: pic/motor2.png Graphic file (type bmp)
-<pic/motor2.png>
-
-Overfull \vbox (1.13654pt too high) detected at line 212
+Overfull \vbox (4.31053pt too high) detected at line 123
  []
 
-[14
+[5
 
-] (./slide.toc) [15
+]
+File: pic/result-1.png Graphic file (type bmp)
+<pic/result-1.png>
+ [6
 
-] [16
-
-] [17
-
-] [18
+]
+File: pic/result-2.png Graphic file (type bmp)
+<pic/result-2.png>
+ [7
 
 ]
 LaTeX Font Info:    Font shape `T1/calligra/m/n' will be
-(Font)              scaled to size 35.82726pt on input line 547.
- [19
+(Font)              scaled to size 35.82726pt on input line 432.
+ [8
 
 ]
 \tf@nav=\write6
@@ -1424,15 +1362,15 @@ LaTeX Font Info:    Font shape `T1/calligra/m/n' will be
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `slide.out' has not changed.
-(rerunfilecheck)             Checksum: 1A8A2C6EE320987C6B06B83FB580AF85;364.
+(rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 31649 strings out of 476683
- 692614 string characters out of 5802282
- 1870012 words of memory out of 5000000
- 51179 multiletter control sequences out of 15000+600000
- 569970 words of font info for 122 fonts, out of 8000000 for 9000
+ 31343 strings out of 476683
+ 682356 string characters out of 5802282
+ 1861012 words of memory out of 5000000
+ 50903 multiletter control sequences out of 15000+600000
+ 550896 words of font info for 96 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 128i,20n,122p,441b,854s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 128i,16n,122p,441b,659s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on slide.pdf (19 pages).
+Output written on slide.pdf (8 pages).
